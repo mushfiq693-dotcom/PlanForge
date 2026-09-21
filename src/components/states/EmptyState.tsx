@@ -1,55 +1,38 @@
 import React from "react";
-import { Terminal, FileCode2, ArrowLeft } from "lucide-react";
+import { Sparkles, Layers, CheckCircle2 } from "lucide-react";
 
 export function EmptyState() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center rounded-[6px] border border-dashed border-border bg-canvas/40 p-8 text-center min-h-[380px]">
-      <div className="flex h-12 w-12 items-center justify-center rounded-[8px] border border-border bg-surface text-primary mb-4 shadow-inner">
-        <FileCode2 className="h-6 w-6" />
+    <div className="flex flex-1 flex-col items-center justify-center rounded-[8px] border border-border/60 bg-canvas/30 p-8 text-center min-h-[420px] transition-all">
+      <div className="relative mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface shadow-md">
+        <Sparkles className="h-6 w-6 text-primary" />
+        <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-canvas">
+          <Layers className="h-3 w-3" />
+        </div>
       </div>
 
-      <h3 className="text-sm font-semibold font-mono text-text mb-1">
-        Ready for Specification
+      <h3 className="text-base font-semibold text-text mb-2 font-sans tracking-tight">
+        Your blueprint will generate here
       </h3>
-      <p className="max-w-md text-xs text-text-muted mb-6 leading-relaxed">
-        Paste a raw app idea on the left or select an example starter. PlanForge will synthesize a complete, 13-section <code className="text-primary font-mono bg-surface px-1 py-0.5 rounded border border-border-subtle">IMPLEMENTATION_PLAN.md</code> ready for Cursor or Claude Code.
+
+      <p className="max-w-md text-xs text-text-muted leading-relaxed mb-6 font-sans">
+        Enter your app idea on the left. PlanForge will produce an execution-ready, 13-section <span className="font-mono text-primary font-medium">IMPLEMENTATION_PLAN.md</span> formatted for Cursor & Claude Code.
       </p>
 
-      <div className="flex items-center gap-2 text-xs font-mono text-text-muted/80 bg-surface/70 border border-border rounded-[6px] px-3.5 py-2">
-        <ArrowLeft className="h-3.5 w-3.5 text-primary animate-pulse" />
-        <span>Enter idea and click <strong className="text-text font-semibold">Generate plan</strong></span>
-      </div>
-
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-lg text-left">
-        <div className="rounded-[6px] border border-border/80 bg-surface/50 p-2.5 text-xs font-mono">
-          <div className="text-primary font-medium flex items-center gap-1 mb-1">
-            <Terminal className="h-3 w-3" />
-            1. Raw Idea
-          </div>
-          <p className="text-[11px] text-text-muted leading-tight">
-            Describe features, goals & users in plain English.
-          </p>
-        </div>
-
-        <div className="rounded-[6px] border border-border/80 bg-surface/50 p-2.5 text-xs font-mono">
-          <div className="text-primary font-medium flex items-center gap-1 mb-1">
-            <Terminal className="h-3 w-3" />
-            2. Master Spec
-          </div>
-          <p className="text-[11px] text-text-muted leading-tight">
-            Merged server-side into 13 structured sections.
-          </p>
-        </div>
-
-        <div className="rounded-[6px] border border-border/80 bg-surface/50 p-2.5 text-xs font-mono">
-          <div className="text-primary font-medium flex items-center gap-1 mb-1">
-            <Terminal className="h-3 w-3" />
-            3. AI Agent Ready
-          </div>
-          <p className="text-[11px] text-text-muted leading-tight">
-            Turnkey tasks and kickoff prompts for immediate coding.
-          </p>
-        </div>
+      {/* Clean, minimal feature highlights */}
+      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-text-muted font-mono">
+        <span className="flex items-center gap-1.5">
+          <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+          Vertical slice tasks
+        </span>
+        <span className="flex items-center gap-1.5">
+          <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+          Turnkey kickoff prompts
+        </span>
+        <span className="flex items-center gap-1.5">
+          <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+          Architecture & ADRs
+        </span>
       </div>
     </div>
   );

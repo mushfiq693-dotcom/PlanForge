@@ -42,19 +42,16 @@ export function IdeaForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <label
             htmlFor="idea-input"
-            className="text-xs font-mono font-medium tracking-wide text-text uppercase flex items-center gap-1.5"
+            className="text-xs font-semibold text-text font-sans"
           >
-            <span>Raw App Idea</span>
-            <span className="text-text-muted lowercase font-normal">
-              (describe core loop, users & features)
-            </span>
+            App Description
           </label>
           <span
-            className={`text-xs font-mono transition-colors ${
+            className={`text-[11px] font-mono transition-colors ${
               isTooLong
                 ? "text-danger font-semibold"
                 : isTooShort
@@ -70,15 +67,15 @@ export function IdeaForm({
           <textarea
             id="idea-input"
             name="idea"
-            rows={6}
+            rows={5}
             disabled={isGenerating}
             value={idea}
             onChange={(e) => {
               onIdeaChange(e.target.value);
               if (!touched) setTouched(true);
             }}
-            placeholder="Paste your raw app idea here... e.g. A bookmark manager with automatic semantic tagging and full-text search across all saved articles, built for developers with local SQLite export..."
-            className={`w-full rounded-[6px] border bg-canvas p-3.5 text-sm text-text placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-all resize-y min-h-[140px] font-sans ${
+            placeholder="Paste your raw app concept here... (e.g. A developer bookmark manager with auto-tagging, full-text search across saved articles, and local SQLite export)"
+            className={`w-full rounded-[6px] border bg-canvas p-3 text-sm text-text placeholder:text-text-muted/50 focus:outline-none focus:ring-1 transition-all resize-y min-h-[130px] font-sans leading-relaxed ${
               isTooLong || (touched && charCount > 0 && isTooShort)
                 ? "border-danger focus:border-danger focus:ring-danger"
                 : "border-border focus:border-primary focus:ring-primary"
@@ -90,14 +87,14 @@ export function IdeaForm({
         {touched && charCount > 0 && isTooShort && (
           <p className="flex items-center gap-1.5 text-xs text-warning font-mono">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-            Please enter at least {MIN_CHARS} characters ({MIN_CHARS - charCount} more needed for a high-quality plan).
+            Please add at least {MIN_CHARS - charCount} more characters for a complete plan.
           </p>
         )}
 
         {isTooLong && (
           <p className="flex items-center gap-1.5 text-xs text-danger font-mono">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-            Idea exceeds maximum allowed length by {(charCount - MAX_CHARS).toLocaleString()} characters.
+            Character limit exceeded by {(charCount - MAX_CHARS).toLocaleString()} characters.
           </p>
         )}
 
@@ -113,12 +110,12 @@ export function IdeaForm({
       {children}
 
       {/* Action Controls */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex items-center gap-3 pt-1">
         {isGenerating ? (
           <button
             type="button"
             onClick={onStop}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-[6px] border border-danger bg-danger/10 px-4 py-2.5 text-sm font-medium text-danger hover:bg-danger/20 active:bg-danger/30 transition-colors focus-visible:outline-2 focus-visible:outline-danger"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-[6px] border border-danger/80 bg-danger-subtle px-4 py-2.5 text-sm font-medium text-danger hover:bg-danger/20 active:bg-danger/30 transition-colors cursor-pointer"
           >
             <Square className="h-4 w-4 fill-current" />
             Stop generating
@@ -136,7 +133,7 @@ export function IdeaForm({
             }`}
           >
             <Sparkles className="h-4 w-4" />
-            Generate plan
+            Generate Plan
           </button>
         )}
       </div>

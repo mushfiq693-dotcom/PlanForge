@@ -41,9 +41,9 @@ export function PlanActions({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-border pb-3 mb-4">
+    <div className="flex items-center justify-between gap-3 border-b border-border/80 pb-3 mb-4">
       {/* Left side: View Mode Toggle */}
-      <div className="flex items-center rounded-[6px] border border-border bg-canvas p-0.5 self-start">
+      <div className="flex items-center rounded-[6px] border border-border bg-canvas p-0.5">
         <button
           type="button"
           id="toggle-preview-mode"
@@ -76,62 +76,61 @@ export function PlanActions({
       </div>
 
       {/* Right side: Actions */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex items-center gap-2">
         {isGenerating ? (
           <button
             type="button"
             id="stop-generation-button"
             onClick={onStop}
-            className="inline-flex items-center gap-1.5 rounded-[6px] border border-danger/50 bg-danger-subtle px-2.5 py-1.5 text-xs font-mono text-danger hover:bg-danger/20 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-[6px] border border-danger/50 bg-danger-subtle px-2.5 py-1 text-xs font-mono text-danger hover:bg-danger/20 transition-colors cursor-pointer"
           >
             <Square className="h-3.5 w-3.5 fill-current" />
             <span>Stop</span>
           </button>
-        ) : (
-          <button
-            type="button"
-            id="regenerate-plan-button"
-            onClick={onRegenerate}
-            disabled={!plan}
-            className="inline-flex items-center gap-1.5 rounded-[6px] border border-border bg-surface px-2.5 py-1.5 text-xs font-mono text-text hover:border-primary/50 hover:bg-surface-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-          >
-            <RefreshCw className="h-3.5 w-3.5 text-primary" />
-            <span className="hidden xs:inline sm:inline">Regenerate</span>
-          </button>
-        )}
+        ) : plan ? (
+          <>
+            <button
+              type="button"
+              id="regenerate-plan-button"
+              onClick={onRegenerate}
+              className="inline-flex items-center gap-1.5 rounded-[6px] border border-border bg-surface px-2.5 py-1 text-xs font-mono text-text hover:border-primary/50 hover:bg-surface-hover transition-colors cursor-pointer"
+            >
+              <RefreshCw className="h-3.5 w-3.5 text-primary" />
+              <span className="hidden sm:inline">Regenerate</span>
+            </button>
 
-        <button
-          type="button"
-          id="copy-markdown-button"
-          aria-label="Copy plan markdown to clipboard"
-          onClick={handleCopy}
-          disabled={!plan}
-          className="inline-flex items-center gap-1.5 rounded-[6px] border border-border bg-surface px-2.5 py-1.5 text-xs font-mono text-text hover:border-primary/50 hover:bg-surface-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-        >
-          {copied ? (
-            <>
-              <Check className="h-3.5 w-3.5 text-primary" />
-              <span className="text-primary font-medium">Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className="h-3.5 w-3.5 text-text-muted" />
-              <span>Copy</span>
-            </>
-          )}
-        </button>
+            <button
+              type="button"
+              id="copy-markdown-button"
+              aria-label="Copy plan markdown to clipboard"
+              onClick={handleCopy}
+              className="inline-flex items-center gap-1.5 rounded-[6px] border border-border bg-surface px-2.5 py-1 text-xs font-mono text-text hover:border-primary/50 hover:bg-surface-hover transition-colors cursor-pointer"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-primary font-medium">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5 text-text-muted" />
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
 
-        <button
-          type="button"
-          id="download-markdown-button"
-          aria-label="Download implementation plan as markdown file"
-          onClick={handleDownload}
-          disabled={!plan}
-          className="inline-flex items-center gap-1.5 rounded-[6px] bg-primary px-3 py-1.5 text-xs font-mono font-semibold text-canvas hover:bg-primary-hover active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-sm"
-        >
-          <Download className="h-3.5 w-3.5" />
-          <span>Download .md</span>
-        </button>
+            <button
+              type="button"
+              id="download-markdown-button"
+              aria-label="Download implementation plan as markdown file"
+              onClick={handleDownload}
+              className="inline-flex items-center gap-1.5 rounded-[6px] bg-primary px-3 py-1 text-xs font-mono font-semibold text-canvas hover:bg-primary-hover active:scale-[0.99] transition-all cursor-pointer shadow-sm"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>Download .md</span>
+            </button>
+          </>
+        ) : null}
       </div>
     </div>
   );
