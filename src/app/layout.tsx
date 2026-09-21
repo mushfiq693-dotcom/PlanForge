@@ -19,7 +19,37 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "PlanForge — Idea-to-Implementation-Plan Generator",
   description:
-    "Convert raw app ideas into rigorous, execution-ready IMPLEMENTATION_PLAN.md documents for AI coding agents.",
+    "Convert raw app ideas into ONE complete, execution-ready IMPLEMENTATION_PLAN.md that AI coding agents (Cursor, Claude Code) can execute immediately.",
+  keywords: [
+    "PlanForge",
+    "AI coding agent",
+    "implementation plan generator",
+    "Cursor AI",
+    "Claude Code",
+    "software architecture",
+    "PRD generator",
+    "vibe coding",
+  ],
+  authors: [{ name: "PlanForge Team" }],
+  creator: "PlanForge",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://planforge.dev",
+    siteName: "PlanForge",
+    title: "PlanForge — Idea-to-Implementation-Plan Generator",
+    description:
+      "Convert raw app ideas into a single, execution-ready IMPLEMENTATION_PLAN.md for AI coding agents.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PlanForge — Idea-to-Implementation-Plan Generator",
+    description:
+      "Convert raw app ideas into a single, execution-ready IMPLEMENTATION_PLAN.md for AI coding agents.",
+  },
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export const viewport: Viewport = {

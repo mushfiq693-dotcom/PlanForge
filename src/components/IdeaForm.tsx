@@ -126,7 +126,9 @@ export function IdeaForm({
         ) : (
           <button
             type="submit"
+            id="submit-plan-button"
             disabled={!isValid}
+            aria-disabled={!isValid}
             className={`flex-1 inline-flex items-center justify-center gap-2 rounded-[6px] bg-primary px-4 py-2.5 text-sm font-semibold text-canvas transition-all shadow-sm ${
               isValid
                 ? "hover:bg-primary-hover active:scale-[0.99] cursor-pointer"
