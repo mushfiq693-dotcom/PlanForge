@@ -2,16 +2,30 @@
 
 import React, { useState } from "react";
 import { IdeaForm } from "@/components/IdeaForm";
+import { AdvancedOptions, AdvancedOptionsValues } from "@/components/AdvancedOptions";
+import { ExampleChips } from "@/components/ExampleChips";
 import { PlanViewer } from "@/components/PlanViewer";
+import { PlanActions } from "@/components/PlanActions";
 import { EmptyState } from "@/components/states/EmptyState";
 import { LoadingState } from "@/components/states/LoadingState";
 import { ErrorState } from "@/components/states/ErrorState";
 import { useGeneratePlan } from "@/features/generate/useGeneratePlan";
 import { GeneratePlanRequest } from "@/features/generate/schema";
 
+const initialAdvancedOptions: AdvancedOptionsValues = {
+  name: "",
+  targetUsers: "",
+  stack: "",
+  level: "",
+  timeline: "",
+  mustHave: "",
+  outOfScope: "",
+};
+
 export default function Home() {
   const [idea, setIdea] = useState("");
-  const [viewMode] = useState<"preview" | "raw">("preview");
+  const [advancedOptions, setAdvancedOptions] = useState<AdvancedOptionsValues>(initialAdvancedOptions);
+  const [viewMode, setViewMode] = useState<"preview" | "raw">("preview");
 
   const {
     status,
@@ -26,8 +40,28 @@ export default function Home() {
   const handleGenerate = () => {
     const payload: GeneratePlanRequest = {
       idea,
+      name: advancedOptions.name || undefined,
+      targetUsers: advancedOptions.targetUsers || undefined,
+      stack: advancedOptions.stack || undefined,
+      level: advancedOptions.level || undefined,
+      timeline: advancedOptions.timeline || undefined,
+      mustHave: advancedOptions.mustHave || undefined,
+      outOfScope: advancedOptions.outOfScope || undefined,
     };
     generate(payload);
+  };
+
+  const handleSelectExample = (
+    exampleIdea: string,
+    options?: Partial<AdvancedOptionsValues>
+  ) => {
+    setIdea(exampleIdea);
+    if (options) {
+      setAdvancedOptions((prev) => ({
+        ...prev,
+        ...options,
+      }));
+    }
   };
 
   return (
@@ -42,7 +76,7 @@ export default function Home() {
             <div>
               <h1 className="text-sm font-semibold tracking-tight text-text flex items-center gap-2">
                 <span>PlanForge</span>
-                <span className="text-[11px] px-1.5 py-0.2 rounded bg-surface border border-border text-text-muted font-mono font-normal">
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-surface border border-border text-text-muted font-mono font-normal">
                   v1.0
                 </span>
               </h1>
@@ -97,7 +131,20 @@ export default function Home() {
               onStop={stop}
               isGenerating={isGenerating}
               error={status === "error" && !plan ? error : null}
-            />
+            >
+              {/* Example Chips */}
+              <ExampleChips
+                onSelect={handleSelectExample}
+                disabled={isGenerating}
+              />
+
+              {/* Collapsible Advanced Options */}
+              <AdvancedOptions
+                values={advancedOptions}
+                onChange={setAdvancedOptions}
+                disabled={isGenerating}
+              />
+            </IdeaForm>
           </div>
         </section>
 
@@ -106,19 +153,16 @@ export default function Home() {
           aria-label="Plan Output Preview Panel"
           className="flex flex-1 flex-col rounded-[10px] border border-border bg-surface p-5 min-h-[500px] shadow-sm"
         >
-          <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-            <div className="flex items-center gap-2">
-              <h2 className="text-xs font-mono uppercase tracking-wider text-text-muted font-semibold flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                IMPLEMENTATION_PLAN.md
-              </h2>
-              {plan && (
-                <span className="text-[11px] font-mono text-text-muted">
-                  ({plan.length.toLocaleString()} chars)
-                </span>
-              )}
-            </div>
-          </div>
+          {/* Plan Actions Bar (Copy, Download, Toggle, Regenerate) */}
+          <PlanActions
+            plan={plan}
+            projectName={advancedOptions.name || undefined}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            onRegenerate={handleGenerate}
+            onStop={stop}
+            isGenerating={isGenerating}
+          />
 
           {/* Dynamic State View */}
           <div className="flex flex-1 flex-col">
