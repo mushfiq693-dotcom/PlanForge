@@ -3,18 +3,15 @@
 import React from "react";
 import Link from "next/link";
 
+import { PlanForgeLogo } from "@/components/PlanForgeLogo";
+
 export function LandingFooter() {
   return (
     <footer className="border-t border-white/10 bg-surface/40 backdrop-blur-md py-8 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-primary text-canvas font-sans font-bold text-xs">
-            PF
-          </div>
-          <span className="text-sm font-semibold text-text font-sans">
-            PlanForge
-          </span>
-          <span className="text-xs text-text-muted font-sans">
+          <PlanForgeLogo markSize={28} showBadge={false} />
+          <span className="text-xs text-text-muted font-sans hidden sm:inline">
             &bull; Idea to Blueprint Generator
           </span>
         </div>

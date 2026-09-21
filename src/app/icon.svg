@@ -1,7 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="6" fill="#0E1116"/>
-  <rect x="1" y="1" width="30" height="30" rx="5" stroke="#2A313C" stroke-width="2"/>
-  <path d="M7 8H18C19.6569 8 21 9.34315 21 11C21 12.6569 19.6569 14 18 14H7V8Z" fill="#3FB6A8"/>
-  <path d="M7 14H15C16.6569 14 18 15.3431 18 17C18 18.6569 16.6569 20 15 20H7V14Z" fill="#3FB6A8" fill-opacity="0.7"/>
-  <rect x="7" y="8" width="3" height="16" fill="#E6EDF3"/>
+  <defs>
+    <linearGradient id="fav-badge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E2632"/>
+      <stop offset="100%" stop-color="#0E1217"/>
+    </linearGradient>
+    <linearGradient id="fav-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#84F0E2"/>
+      <stop offset="100%" stop-color="#3FB6A8"/>
+    </linearGradient>
+    <linearGradient id="fav-left" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3FB6A8"/>
+      <stop offset="100%" stop-color="#1E6E64"/>
+    </linearGradient>
+    <linearGradient id="fav-right" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5BE2D3"/>
+      <stop offset="100%" stop-color="#25897E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background Base Squircle -->
+  <rect width="32" height="32" rx="8" fill="url(#fav-badge)"/>
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="7.25" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+
+  <!-- Isometric Top Blueprint Facet -->
+  <path d="M16 6L25 11.2L16 16.4L7 11.2L16 6Z" fill="url(#fav-top)"/>
+
+  <!-- Left Pillar (P Backbone) -->
+  <path d="M7.5 12.8L14.8 17V26.2L7.5 22V12.8Z" fill="url(#fav-left)"/>
+
+  <!-- Right Stepped Forge Wings (F Slices) -->
+  <path d="M17.2 17L24.5 12.8V16.2L19.8 19L24.5 21.8V25.2L17.2 21V17Z" fill="url(#fav-right)"/>
+
+  <!-- Center Node -->
+  <circle cx="16" cy="16.4" r="1.2" fill="#FFFFFF"/>
 </svg>

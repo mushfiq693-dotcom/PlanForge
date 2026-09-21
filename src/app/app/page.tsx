@@ -12,6 +12,7 @@ import { LoadingState } from "@/components/states/LoadingState";
 import { ErrorState } from "@/components/states/ErrorState";
 import { useGeneratePlan } from "@/features/generate/useGeneratePlan";
 import { GeneratePlanRequest } from "@/features/generate/schema";
+import { PlanForgeLogo } from "@/components/PlanForgeLogo";
 
 const initialAdvancedOptions: AdvancedOptionsValues = {
   name: "",
@@ -61,19 +62,9 @@ export default function PlannerWorkspacePage() {
 
             <div className="h-4 w-px bg-white/10 hidden sm:block" />
 
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary text-canvas font-sans font-bold text-sm shadow-sm">
-                PF
-              </div>
-              <div>
-                <h1 className="text-sm font-semibold tracking-tight text-text flex items-center gap-2 font-sans">
-                  PlanForge
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-text-muted font-sans font-normal">
-                    Workspace
-                  </span>
-                </h1>
-              </div>
-            </div>
+            <Link href="/" className="group inline-flex items-center">
+              <PlanForgeLogo markSize={32} badgeText="Workspace" />
+            </Link>
           </div>
 
           <div className="flex items-center gap-3">

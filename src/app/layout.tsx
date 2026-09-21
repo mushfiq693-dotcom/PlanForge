@@ -57,7 +57,9 @@ export const viewport: Viewport = {
   themeColor: "#0E1116",
 };
 
+import "lenis/dist/lenis.css";
 import { BackgroundVideo } from "@/components/BackgroundVideo";
+import { SmoothScroll } from "@/components/SmoothScroll";
 
 export default function RootLayout({
   children,
@@ -71,9 +73,11 @@ export default function RootLayout({
     >
       <body className={`${inter.className} min-h-full flex flex-col bg-canvas text-text selection:bg-primary/20 selection:text-primary relative`}>
         <BackgroundVideo />
-        <div className="relative z-10 flex min-h-full flex-1 flex-col">
-          {children}
-        </div>
+        <SmoothScroll>
+          <div className="relative z-10 flex min-h-full flex-1 flex-col">
+            {children}
+          </div>
+        </SmoothScroll>
       </body>
     </html>
   );

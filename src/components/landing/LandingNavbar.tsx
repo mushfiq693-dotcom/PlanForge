@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { PlanForgeLogo } from "@/components/PlanForgeLogo";
 
 export function LandingNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,18 +27,8 @@ export function LandingNavbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-primary text-canvas font-sans font-bold text-sm shadow-md transition-transform group-hover:scale-105">
-            PF
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-base font-bold tracking-tight text-text font-sans group-hover:text-primary transition-colors">
-              PlanForge
-            </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface/80 border border-white/10 text-text-muted font-sans font-medium">
-              v1.0
-            </span>
-          </div>
+        <Link href="/" className="group inline-flex items-center">
+          <PlanForgeLogo markSize={36} badgeText="v1.0" />
         </Link>
 
         {/* Desktop Navigation Links */}
