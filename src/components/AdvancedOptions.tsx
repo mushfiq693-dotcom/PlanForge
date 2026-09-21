@@ -2,16 +2,12 @@
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
-import { ExperienceLevel, Timeline } from "@/features/generate/schema";
+import { ExperienceLevel } from "@/features/generate/schema";
 
 export interface AdvancedOptionsValues {
   name: string;
   targetUsers: string;
-  stack: string;
   level: ExperienceLevel | "";
-  timeline: Timeline | "";
-  mustHave: string;
-  outOfScope: string;
 }
 
 interface AdvancedOptionsProps {
@@ -40,11 +36,7 @@ export function AdvancedOptions({
   const hasConfiguredValues = Boolean(
     (values.name && values.name.trim() !== "") ||
       (values.targetUsers && values.targetUsers.trim() !== "") ||
-      (values.stack && values.stack.trim() !== "") ||
-      Boolean(values.level) ||
-      Boolean(values.timeline) ||
-      (values.mustHave && values.mustHave.trim() !== "") ||
-      (values.outOfScope && values.outOfScope.trim() !== "")
+      Boolean(values.level)
   );
 
   return (
@@ -76,10 +68,10 @@ export function AdvancedOptions({
       {isOpen && (
         <div
           id="advanced-options-panel"
-          className="border-t border-border p-3 space-y-3 font-sans text-xs animate-in fade-in-50 duration-150"
+          className="border-t border-border p-3.5 space-y-3 font-sans text-xs animate-in fade-in-50 duration-150"
         >
           {/* Row 1: Project Name & Target Users */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label
                 htmlFor="adv-project-name"
@@ -95,7 +87,7 @@ export function AdvancedOptions({
                 value={values.name}
                 onChange={(e) => handleChange("name", e.target.value)}
                 maxLength={100}
-                className="w-full rounded-[6px] border border-border bg-canvas p-2 text-xs text-text placeholder:text-text-muted/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-[6px] border border-border bg-canvas px-3 py-2 text-xs text-text placeholder:text-text-muted/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
 
@@ -110,43 +102,24 @@ export function AdvancedOptions({
                 id="adv-target-users"
                 type="text"
                 disabled={disabled}
-                placeholder="e.g. Solo founders, students"
+                placeholder="e.g. Solo developers, students"
                 value={values.targetUsers}
                 onChange={(e) => handleChange("targetUsers", e.target.value)}
                 maxLength={500}
-                className="w-full rounded-[6px] border border-border bg-canvas p-2 text-xs text-text placeholder:text-text-muted/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-[6px] border border-border bg-canvas px-3 py-2 text-xs text-text placeholder:text-text-muted/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
           </div>
 
-          {/* Row 2: Stack, Level, Timeline */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            <div>
-              <label
-                htmlFor="adv-stack"
-                className="block font-medium text-[11px] text-text-muted mb-1"
-              >
-                Preferred Stack
-              </label>
-              <input
-                id="adv-stack"
-                type="text"
-                disabled={disabled}
-                placeholder="e.g. Next.js, SQLite"
-                value={values.stack}
-                onChange={(e) => handleChange("stack", e.target.value)}
-                maxLength={500}
-                className="w-full rounded-[6px] border border-border bg-canvas p-2 text-xs text-text placeholder:text-text-muted/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="adv-level"
-                className="block font-medium text-[11px] text-text-muted mb-1"
-              >
-                Experience Level
-              </label>
+          {/* Row 2: Custom Modern Experience Level Dropdown */}
+          <div>
+            <label
+              htmlFor="adv-level"
+              className="block font-medium text-[11px] text-text-muted mb-1"
+            >
+              Experience Level
+            </label>
+            <div className="relative">
               <select
                 id="adv-level"
                 disabled={disabled}
@@ -154,78 +127,16 @@ export function AdvancedOptions({
                 onChange={(e) =>
                   handleChange("level", e.target.value as ExperienceLevel | "")
                 }
-                className="w-full rounded-[6px] border border-border bg-canvas p-2 text-xs text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-sans"
+                className="w-full appearance-none rounded-[6px] border border-border bg-canvas px-3 py-2 pr-9 text-xs text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-sans cursor-pointer transition-colors"
               >
-                <option value="">Let AI decide</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
+                <option value="" className="bg-surface text-text">Let AI decide (Recommended)</option>
+                <option value="beginner" className="bg-surface text-text">Beginner — Extra explanation & starter-friendly setup</option>
+                <option value="intermediate" className="bg-surface text-text">Intermediate — Standard modern design & architecture</option>
+                <option value="advanced" className="bg-surface text-text">Advanced — Scalable architecture, testing & performance</option>
               </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="adv-timeline"
-                className="block font-medium text-[11px] text-text-muted mb-1"
-              >
-                Timeline Target
-              </label>
-              <select
-                id="adv-timeline"
-                disabled={disabled}
-                value={values.timeline}
-                onChange={(e) =>
-                  handleChange("timeline", e.target.value as Timeline | "")
-                }
-                className="w-full rounded-[6px] border border-border bg-canvas p-2 text-xs text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-sans"
-              >
-                <option value="">Let AI decide</option>
-                <option value="weekend">Weekend Sprint</option>
-                <option value="2_weeks">2 Weeks</option>
-                <option value="1_month">1 Month</option>
-                <option value="open">Flexible</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Row 3: Must-Have Features & Out of Scope */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
-              <label
-                htmlFor="adv-must-have"
-                className="block font-medium text-[11px] text-text-muted mb-1"
-              >
-                Must-Have Features
-              </label>
-              <textarea
-                id="adv-must-have"
-                rows={2}
-                disabled={disabled}
-                placeholder="e.g. Export markdown, dark mode"
-                value={values.mustHave}
-                onChange={(e) => handleChange("mustHave", e.target.value)}
-                maxLength={2000}
-                className="w-full rounded-[6px] border border-border bg-canvas p-2 text-xs text-text placeholder:text-text-muted/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="adv-out-of-scope"
-                className="block font-medium text-[11px] text-text-muted mb-1"
-              >
-                Out of Scope (v1)
-              </label>
-              <textarea
-                id="adv-out-of-scope"
-                rows={2}
-                disabled={disabled}
-                placeholder="e.g. User auth, payments"
-                value={values.outOfScope}
-                onChange={(e) => handleChange("outOfScope", e.target.value)}
-                maxLength={2000}
-                className="w-full rounded-[6px] border border-border bg-canvas p-2 text-xs text-text placeholder:text-text-muted/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-              />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-text-muted">
+                <ChevronDown className="h-4 w-4" />
+              </div>
             </div>
           </div>
         </div>

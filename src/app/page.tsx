@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { IdeaForm } from "@/components/IdeaForm";
 import { AdvancedOptions, AdvancedOptionsValues } from "@/components/AdvancedOptions";
-import { ExampleChips } from "@/components/ExampleChips";
 import { PlanViewer } from "@/components/PlanViewer";
 import { PlanActions } from "@/components/PlanActions";
 import { EmptyState } from "@/components/states/EmptyState";
@@ -15,11 +14,7 @@ import { GeneratePlanRequest } from "@/features/generate/schema";
 const initialAdvancedOptions: AdvancedOptionsValues = {
   name: "",
   targetUsers: "",
-  stack: "",
   level: "",
-  timeline: "",
-  mustHave: "",
-  outOfScope: "",
 };
 
 export default function Home() {
@@ -42,26 +37,9 @@ export default function Home() {
       idea,
       name: advancedOptions.name || undefined,
       targetUsers: advancedOptions.targetUsers || undefined,
-      stack: advancedOptions.stack || undefined,
       level: advancedOptions.level || undefined,
-      timeline: advancedOptions.timeline || undefined,
-      mustHave: advancedOptions.mustHave || undefined,
-      outOfScope: advancedOptions.outOfScope || undefined,
     };
     generate(payload);
-  };
-
-  const handleSelectExample = (
-    exampleIdea: string,
-    options?: Partial<AdvancedOptionsValues>
-  ) => {
-    setIdea(exampleIdea);
-    if (options) {
-      setAdvancedOptions((prev) => ({
-        ...prev,
-        ...options,
-      }));
-    }
   };
 
   return (
@@ -129,13 +107,7 @@ export default function Home() {
               isGenerating={isGenerating}
               error={status === "error" && !plan ? error : null}
             >
-              {/* Example Chips */}
-              <ExampleChips
-                onSelect={handleSelectExample}
-                disabled={isGenerating}
-              />
-
-              {/* Collapsible Advanced Options */}
+              {/* Collapsible Optional Context (Project Name, Target Users, Experience Level) */}
               <AdvancedOptions
                 values={advancedOptions}
                 onChange={setAdvancedOptions}
