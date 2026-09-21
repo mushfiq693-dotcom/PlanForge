@@ -51,7 +51,7 @@ export function IdeaForm({
             App Description
           </label>
           <span
-            className={`text-[11px] font-mono transition-colors ${
+            className={`text-xs font-sans transition-colors ${
               isTooLong
                 ? "text-danger font-semibold"
                 : isTooShort
@@ -75,7 +75,7 @@ export function IdeaForm({
               if (!touched) setTouched(true);
             }}
             placeholder="Paste your raw app concept here... (e.g. A developer bookmark manager with auto-tagging, full-text search across saved articles, and local SQLite export)"
-            className={`w-full rounded-[6px] border bg-canvas p-3 text-sm text-text placeholder:text-text-muted/50 focus:outline-none focus:ring-1 transition-all resize-y min-h-[130px] font-sans leading-relaxed ${
+            className={`w-full rounded-[8px] border bg-canvas/90 p-3.5 text-sm text-text placeholder:text-text-muted/50 focus:outline-none focus:ring-1 transition-all resize-y min-h-[130px] font-sans leading-relaxed ${
               isTooLong || (touched && charCount > 0 && isTooShort)
                 ? "border-danger focus:border-danger focus:ring-danger"
                 : "border-border focus:border-primary focus:ring-primary"
@@ -85,21 +85,21 @@ export function IdeaForm({
 
         {/* Validation Feedback */}
         {touched && charCount > 0 && isTooShort && (
-          <p className="flex items-center gap-1.5 text-xs text-warning font-mono">
+          <p className="flex items-center gap-1.5 text-xs text-warning font-sans">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
             Please add at least {MIN_CHARS - charCount} more characters for a complete plan.
           </p>
         )}
 
         {isTooLong && (
-          <p className="flex items-center gap-1.5 text-xs text-danger font-mono">
+          <p className="flex items-center gap-1.5 text-xs text-danger font-sans">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
             Character limit exceeded by {(charCount - MAX_CHARS).toLocaleString()} characters.
           </p>
         )}
 
         {error && (
-          <div className="flex items-start gap-2 rounded-[6px] border border-danger/40 bg-danger-subtle p-3 text-xs text-danger font-mono">
+          <div className="flex items-start gap-2 rounded-[6px] border border-danger/40 bg-danger-subtle p-3 text-xs text-danger font-sans">
             <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>

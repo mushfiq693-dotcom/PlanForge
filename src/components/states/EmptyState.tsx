@@ -15,12 +15,12 @@ export function EmptyState() {
         Your blueprint will generate here
       </h3>
 
-      <p className="max-w-md text-xs text-text-muted leading-relaxed mb-6 font-sans">
-        Enter your app idea on the left. PlanForge will produce an execution-ready, 13-section <span className="font-mono text-primary font-medium">IMPLEMENTATION_PLAN.md</span> formatted for Cursor & Claude Code.
+      <p className="max-w-md text-xs sm:text-sm text-text-muted leading-relaxed mb-6 font-sans">
+        Enter your app idea on the left. PlanForge will produce an execution-ready, 13-section <span className="text-primary font-medium">IMPLEMENTATION_PLAN.md</span> formatted for Antigravity &amp; Claude Code.
       </p>
 
       {/* Clean, minimal feature highlights */}
-      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-text-muted font-mono">
+      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-sans text-text-muted">
         <span className="flex items-center gap-1.5">
           <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
           Vertical slice tasks
@@ -31,7 +31,7 @@ export function EmptyState() {
         </span>
         <span className="flex items-center gap-1.5">
           <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-          Architecture & ADRs
+          Architecture &amp; ADRs
         </span>
       </div>
     </div>

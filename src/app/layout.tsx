@@ -1,30 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const ibmPlexSans = IBM_Plex_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-ibm-plex-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-ibm-plex-mono",
+  variable: "--font-mono-main",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "PlanForge — Idea-to-Implementation-Plan Generator",
   description:
-    "Convert raw app ideas into ONE complete, execution-ready IMPLEMENTATION_PLAN.md that AI coding agents (Cursor, Claude Code) can execute immediately.",
+    "Convert raw app ideas into ONE complete, execution-ready IMPLEMENTATION_PLAN.md that AI coding agents (Antigravity, Claude Code) can execute immediately.",
   keywords: [
     "PlanForge",
     "AI coding agent",
     "implementation plan generator",
-    "Cursor AI",
+    "Antigravity",
     "Claude Code",
     "software architecture",
     "PRD generator",
@@ -58,6 +57,8 @@ export const viewport: Viewport = {
   themeColor: "#0E1116",
 };
 
+import { BackgroundVideo } from "@/components/BackgroundVideo";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -66,10 +67,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} dark h-full antialiased`}
+      className={`${inter.variable} ${jetbrainsMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-canvas text-text font-sans selection:bg-primary/20 selection:text-primary">
-        {children}
+      <body className={`${inter.className} min-h-full flex flex-col bg-canvas text-text selection:bg-primary/20 selection:text-primary relative`}>
+        <BackgroundVideo />
+        <div className="relative z-10 flex min-h-full flex-1 flex-col">
+          {children}
+        </div>
       </body>
     </html>
   );

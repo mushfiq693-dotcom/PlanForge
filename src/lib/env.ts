@@ -68,9 +68,13 @@ export function validateServerEnv(
 
 /**
  * Validates and retrieves server environment variables.
- * Caches the parsed result in production/runtime.
+ * In development, reads fresh process.env so edits to .env.local apply immediately.
  */
 export function getServerEnv(): ServerEnv {
+  if (process.env.NODE_ENV !== "production") {
+    return validateServerEnv(process.env);
+  }
+
   if (cachedEnv) {
     return cachedEnv;
   }

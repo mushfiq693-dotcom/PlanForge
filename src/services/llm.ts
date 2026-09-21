@@ -111,19 +111,48 @@ export async function streamCompletion(
   });
 
   try {
-    const stream = await client.chat.completions.create(
-      {
-        model: env.OPENROUTER_MODEL,
-        messages: [
-          { role: "system", content: options.system },
-          { role: "user", content: options.user },
-        ],
-        stream: true,
-      },
-      {
-        signal: options.signal,
+    let stream: AsyncIterable<OpenAI.Chat.Completions.ChatCompletionChunk>;
+    try {
+      stream = await client.chat.completions.create(
+        {
+          model: env.OPENROUTER_MODEL,
+          messages: [
+            { role: "system", content: options.system },
+            { role: "user", content: options.user },
+          ],
+          stream: true,
+        },
+        {
+          signal: options.signal,
+        }
+      );
+    } catch (primaryError: unknown) {
+      // If primary model failed due to rate limits/outage and is not already openrouter/free, try openrouter/free fallback
+      if (
+        env.OPENROUTER_MODEL !== "openrouter/free" &&
+        !options.signal?.aborted
+      ) {
+        try {
+          stream = await client.chat.completions.create(
+            {
+              model: "openrouter/free",
+              messages: [
+                { role: "system", content: options.system },
+                { role: "user", content: options.user },
+              ],
+              stream: true,
+            },
+            {
+              signal: options.signal,
+            }
+          );
+        } catch {
+          throw mapProviderError(primaryError, options.signal);
+        }
+      } else {
+        throw mapProviderError(primaryError, options.signal);
       }
-    );
+    }
 
     async function* generateTokens(): AsyncGenerator<string, void, unknown> {
       for await (const chunk of stream) {

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-mono-main), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
@@ -31,8 +31,8 @@
   --surface-active: #22272E;
   --border: #2A313C;
   --border-subtle: #21262D;
-  --text: #E6EDF3;
-  --text-muted: #8B949E;
+  --text: #F0F4F8;
+  --text-muted: #A3AFBF;
   --primary: #3FB6A8;
   --primary-hover: #34A093;
   --primary-subtle: rgba(63, 182, 168, 0.12);
@@ -46,11 +46,19 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
 html, body {
   background-color: var(--canvas);
   color: var(--text);
-  font-family: var(--font-ibm-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
   min-height: 100%;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom technical scrollbar */
@@ -94,6 +102,36 @@ html, body {
 
 .animate-caret {
   animation: blink 0.9s infinite;
+}
+
+/* Glassmorphism Design System Tokens */
+.glass-panel {
+  background: rgba(22, 27, 34, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(22, 27, 34, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-pill {
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glow-primary {
+  box-shadow: 0 0 30px -5px rgba(63, 182, 168, 0.35);
+}
+
+.glow-primary-sm {
+  box-shadow: 0 0 15px -3px rgba(63, 182, 168, 0.25);
 }
 
 @media (prefers-reduced-motion: reduce) {
