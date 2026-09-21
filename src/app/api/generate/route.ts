@@ -4,6 +4,7 @@ import { buildPrompt } from "@/lib/prompts/build-prompt";
 import { streamCompletion, LLMError, LLMAbortError } from "@/services/llm";
 import { getServerEnv } from "@/lib/env";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { ApiErrorResponse, ApiErrorCode } from "@/types/api";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,23 +25,21 @@ function getClientIp(req: NextRequest): string {
 }
 
 export async function POST(req: NextRequest) {
-  // 1. Verify server environment configuration
+  // 1. Verify server environment configuration (Fail fast, 500)
   let env;
   try {
     env = getServerEnv();
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Server configuration error";
-    return NextResponse.json(
-      {
-        error: "Server is not configured properly to generate plans.",
-        code: "SERVER_CONFIG_ERROR",
-        details: process.env.NODE_ENV === "development" ? message : undefined,
-      },
-      { status: 500 }
-    );
+    const errorBody: ApiErrorResponse = {
+      error: "Server is not properly configured with an AI provider key.",
+      code: "SERVER_CONFIG_ERROR",
+      details: process.env.NODE_ENV === "development" ? message : undefined,
+    };
+    return NextResponse.json(errorBody, { status: 500 });
   }
 
-  // 2. Extract client IP and enforce rate limiting
+  // 2. Extract client IP and enforce rate limiting (429)
   const clientIp = getClientIp(req);
   const rateLimit = checkRateLimit(
     clientIp,
@@ -50,36 +49,33 @@ export async function POST(req: NextRequest) {
 
   if (!rateLimit.success) {
     const retryAfterSec = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
-    return NextResponse.json(
-      {
-        error: `Rate limit exceeded. Maximum ${env.RATE_LIMIT_MAX} requests per ${env.RATE_LIMIT_WINDOW_MINUTES} minutes.`,
-        code: "RATE_LIMITED",
-        resetAt: rateLimit.resetAt,
+    const errorBody: ApiErrorResponse = {
+      error: `Rate limit exceeded. Maximum ${env.RATE_LIMIT_MAX} requests per ${env.RATE_LIMIT_WINDOW_MINUTES} minutes.`,
+      code: "RATE_LIMITED",
+      resetAt: rateLimit.resetAt,
+    };
+
+    return NextResponse.json(errorBody, {
+      status: 429,
+      headers: {
+        "Retry-After": String(Math.max(1, retryAfterSec)),
+        "X-RateLimit-Limit": String(rateLimit.limit),
+        "X-RateLimit-Remaining": "0",
+        "X-RateLimit-Reset": String(rateLimit.resetAt),
       },
-      {
-        status: 429,
-        headers: {
-          "Retry-After": String(Math.max(1, retryAfterSec)),
-          "X-RateLimit-Limit": String(rateLimit.limit),
-          "X-RateLimit-Remaining": "0",
-          "X-RateLimit-Reset": String(rateLimit.resetAt),
-        },
-      }
-    );
+    });
   }
 
-  // 3. Parse and validate request JSON body
+  // 3. Parse and validate request JSON body (400)
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json(
-      {
-        error: "Invalid JSON request body.",
-        code: "BAD_REQUEST",
-      },
-      { status: 400 }
-    );
+    const errorBody: ApiErrorResponse = {
+      error: "Invalid JSON request body.",
+      code: "BAD_REQUEST",
+    };
+    return NextResponse.json(errorBody, { status: 400 });
   }
 
   const validationResult = generatePlanRequestSchema.safeParse(body);
@@ -89,20 +85,19 @@ export async function POST(req: NextRequest) {
       message: issue.message,
     }));
 
-    return NextResponse.json(
-      {
-        error: issues[0]?.message || "Validation failed for request input.",
-        code: "VALIDATION_ERROR",
-        issues,
-      },
-      { status: 400 }
-    );
+    const errorBody: ApiErrorResponse = {
+      error: issues[0]?.message || "Validation failed for request parameters.",
+      code: "VALIDATION_ERROR",
+      issues,
+    };
+
+    return NextResponse.json(errorBody, { status: 400 });
   }
 
   // 4. Assemble system and user prompts
   const assembledPrompt = buildPrompt(validationResult.data);
 
-  // 5. Stream response via LLM service
+  // 5. Stream response via LLM service (200 SSE / chunked stream or 401/402/500/502)
   try {
     const tokenStream = await streamCompletion({
       system: assembledPrompt.system,
@@ -152,21 +147,23 @@ export async function POST(req: NextRequest) {
     }
 
     if (error instanceof LLMError) {
-      return NextResponse.json(
-        {
-          error: error.message,
-          code: error.code,
-        },
-        { status: error.statusCode }
-      );
+      const errorCode: ApiErrorCode = (
+        ["UNAUTHORIZED", "INSUFFICIENT_CREDITS", "RATE_LIMITED", "PROVIDER_UNAVAILABLE", "CLIENT_ABORTED"].includes(error.code)
+          ? error.code
+          : "PROVIDER_UNAVAILABLE"
+      ) as ApiErrorCode;
+
+      const errorBody: ApiErrorResponse = {
+        error: error.message,
+        code: errorCode,
+      };
+      return NextResponse.json(errorBody, { status: error.statusCode });
     }
 
-    return NextResponse.json(
-      {
-        error: "An unexpected error occurred while generating the implementation plan.",
-        code: "INTERNAL_ERROR",
-      },
-      { status: 500 }
-    );
+    const fallbackError: ApiErrorResponse = {
+      error: "An unexpected error occurred while generating the implementation plan.",
+      code: "INTERNAL_ERROR",
+    };
+    return NextResponse.json(fallbackError, { status: 500 });
   }
 }
