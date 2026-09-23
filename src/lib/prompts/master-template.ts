@@ -1,6 +1,6 @@
 /**
  * Master Template for PlanForge Implementation Plans
- * Version: 1.0.0
+ * Version: 2.0.0
  * Location: src/lib/prompts/master-template.ts
  */
 
@@ -13,6 +13,8 @@ export const MASTER_TEMPLATE = `# [PROJECT_NAME]: Implementation Plan
 ## 0. PROJECT SNAPSHOT
 - **Project Name:** [Exact Project Name]
 - **One-Line Pitch:** [Clear, single-sentence summary of the product]
+- **Scope Classification:** [tiny | standard | rich]
+- **Locale & Domain Context:** [Detected currency e.g. ৳ (BDT) / $ (USD) / € (EUR), language, local service integrations, and number formatting]
 - **Target User:** [Primary persona and user segment]
 - **Core Problem:** [The fundamental pain point being solved]
 - **Assumptions:**
@@ -32,23 +34,26 @@ export const MASTER_TEMPLATE = `# [PROJECT_NAME]: Implementation Plan
 - **User Story 2:** As a [user], I want to [action] so that [benefit].
 - **User Story 3:** As a [user], I want to [action] so that [benefit].
 
-### 1.3 Goals & Success Metrics
+### 1.3 Goals, Success Metrics & Speed Targets
 - **Core Goal:** [What defines a successful build of this app]
+- **Speed & UX Targets:**
+  - [Speed Target 1: e.g. Primary flow achievable in under 10 seconds, max 2 clicks/taps]
+  - [Speed Target 2: e.g. Default inputs pre-populated with sensible defaults (today's date, previous category)]
 - **Success Criteria (Numbered & Testable):**
   1. [Testable criterion 1: e.g. User can perform core action in under 3 steps]
   2. [Testable criterion 2: e.g. Response/action renders within X ms / real-time]
   3. [Testable criterion 3: e.g. Zero runtime crashes on happy path]
 
-### 1.4 Core Feature Requirements (MVP)
-- **Feature 1:** [Name & specific capability description]
-- **Feature 2:** [Name & specific capability description]
-- **Feature 3:** [Name & specific capability description]
-- **Feature 4:** [Name & specific capability description]
+### 1.4 Core Feature Requirements (MVP Breakdown)
+- **Module 1 ([Name]):** [Specific capabilities and requirements]
+- **Module 2 ([Name]):** [Specific capabilities and requirements]
+- **Module 3 ([Name]):** [Specific capabilities and requirements]
+- **Module 4 ([Name]):** [Specific capabilities and requirements]
 
 ### 1.5 Explicitly Out of Scope (v1)
-- [Deferred Feature 1: e.g. Team collaboration]
-- [Deferred Feature 2: e.g. Native mobile apps]
-- [Deferred Feature 3: e.g. Advanced analytics]
+- [Deferred Feature 1: e.g. Team collaboration (Reason: single-user core focus for v1)]
+- [Deferred Feature 2: e.g. Native mobile apps (Reason: responsive web first)]
+- [Deferred Feature 3: e.g. Advanced AI analytics (Reason: establish reliable ledger first)]
 
 ---
 
@@ -56,21 +61,22 @@ export const MASTER_TEMPLATE = `# [PROJECT_NAME]: Implementation Plan
 ### 2.1 Technology Stack & Justification
 - **Frontend / Framework:** [e.g. Next.js App Router (TypeScript)]: [One-line justification]
 - **Styling / UI Components:** [e.g. Tailwind CSS + Lucide Icons]: [One-line justification]
-- **State Management:** [e.g. React state / Zustand / Context]: [One-line justification]
-- **Backend / API:** [e.g. Next.js Route Handlers]: [One-line justification]
-- **Database / ORM:** [e.g. Cloud Firestore / PostgreSQL (Prisma/Drizzle) / SQLite / In-Memory]: [One-line justification]
-- **Deployment Platform:** [e.g. Vercel]: [One-line justification]
+- **State Management:** [e.g. React state / Zustand / Server Actions]: [One-line justification]
+- **Backend / API:** [e.g. Next.js Route Handlers / Server Actions]: [One-line justification]
+- **Database / ORM:** [e.g. PostgreSQL (Supabase / Neon + Prisma/Drizzle)]: [One-line justification verified against host]
+- **Authentication & Authorization:** [e.g. Supabase Auth / NextAuth with RLS]: [One-line justification]
+- **Deployment Platform:** [e.g. Vercel / Railway]: [One-line justification]
 
 ### 2.2 System Flow Diagram (ASCII)
 \`\`\`
-[User Browser / Client]
+[User Browser / Mobile Client]
        │
-       ▼ (HTTP / SSE / WebSocket)
-[Next.js App Router / Server Route Handlers]
+       ▼ (HTTPS / Server Actions / REST)
+[Next.js App Router (Server-side Handlers)]
        │
-       ├──► [Validation Layer (Zod)]
-       ├──► [Services & Business Logic]
-       └──► [Database / External API Integration]
+       ├──► [Zod Validation Layer]
+       ├──► [Business Logic & Service Layer]
+       └──► [Database / Postgres (with RLS policies)]
 \`\`\`
 
 ### 2.3 Proposed Directory Structure
@@ -85,59 +91,93 @@ src/
 ├── components/
 │   ├── ui/
 │   └── [feature]/
+├── features/
+│   └── [feature]/
+│       ├── schema.ts
+│       └── services.ts
 ├── hooks/
 ├── lib/
-├── services/
+│   ├── db.ts
+│   └── formatters.ts
 └── types/
 \`\`\`
 
 ### 2.4 Architectural Rules
-- **Rule 1:** [Specific rule, e.g. API keys live ONLY in server environment; never imported in client code]
-- **Rule 2:** [Specific rule, e.g. UI components contain no database or external API logic; access via service layer]
-- **Rule 3:** [Specific rule, e.g. Every API route request and response payload must be validated with Zod]
-- **Rule 4:** [Specific rule, e.g. Streaming responses must handle client disconnects and abort signals gracefully]
+- **Rule 1:** API keys and service-role secrets reside strictly in server environment; never imported in client code.
+- **Rule 2:** UI components contain no database logic; data access is encapsulated in typed service layers.
+- **Rule 3:** Every mutation and API route payload must be validated server-side with Zod.
+- **Rule 4:** Money values stored strictly as integer minor units or Decimal; never floating-point numbers.
 
 ---
 
-## 3. DESIGN SYSTEM (anti-AI-look): MUST contain all of these sub-parts:
+## 3. DESIGN SYSTEM (Anti-AI-Look)
 ### 3.1 Subject Anchor
 - **Industry & Audience Vocabulary:** [2 lines explaining the product's real domain and audience from which the visual identity is derived]
 
-### 3.2 Aesthetic Direction
-- **Named Direction:** [One specific, opinionated direction with a name and a one-line rationale, NOT "modern, clean, minimal"]
-- **Rationale:** [One-line rationale anchored in the product's domain]
+### 3.2 Aesthetic Direction Evaluation
+- **Candidate 1:** [Direction Name, Hue family, Font pairing, Mood]
+- **Candidate 2:** [Direction Name, Hue family, Font pairing, Mood]
+- **Candidate 3:** [Direction Name, Hue family, Font pairing, Mood]
+- **Selected Direction:** [Chosen candidate]
+- **Selection Rationale:** [One-line rationale tied to the product's domain, audience, and tactile feel]
 
-### 3.3 Color Tokens (Hex)
-- [4-6 named hex values with an exact role for each, plus light/dark behavior]
-- **Canvas / Base:** \`#HEX\` - [Role]
-- **Surface / Card:** \`#HEX\` - [Role]
-- **Primary Accent:** \`#HEX\` - [Role]
-- **Muted / Border:** \`#HEX\` - [Role]
-- **Text Primary:** \`#HEX\` - [Role]
+### 3.3 Color Tokens (Light & Dark Mode)
+- **Light Mode Palette:**
+  - **Canvas / Background:** \`#HEX\` - [Role]
+  - **Surface / Card:** \`#HEX\` - [Role]
+  - **Border / Subtle:** \`#HEX\` - [Role]
+  - **Text Primary:** \`#HEX\` - [Role]
+  - **Text Secondary / Muted:** \`#HEX\` - [Role]
+  - **Primary Accent:** \`#HEX\` - [Role]
+- **Semantic Status Tokens (WCAG AA Contrast >= 4.5:1):**
+  - **Success (e.g. Income/Active):** \`#HEX\` - [Muted, accessible green/emerald]
+  - **Warning (e.g. Budget Alert):** \`#HEX\` - [Muted, accessible amber/orange]
+  - **Danger (e.g. Expense/Overdue):** \`#HEX\` - [Muted, accessible ruby/crimson]
+- **Dark Mode Palette:**
+  - **Canvas (Dark):** \`#HEX\` - [Tinted dark neutral, never #000000 flat]
+  - **Surface (Dark):** \`#HEX\` - [Card background]
+  - **Border (Dark):** \`#HEX\` - [Subtle boundary]
+  - **Text Primary (Dark):** \`#HEX\` - [High-legibility primary text]
 
-### 3.4 Typography & Scale
-- **Font Families:** [One or two deliberate families with roles]
-- **Scale:** [Sizes, weights, line-height, with line length under 80 characters]
+### 3.4 Typography & Numbers / Data Rules
+- **Primary Typography:** [Font Family, e.g. Plus Jakarta Sans / Satoshi / General Sans]
+- **Secondary / Display:** [Font Family, e.g. Cabinet Grotesk / Newsreader / Archivo]
+- **Numbers & Data Typography:**
+  - Strict \`font-variant-numeric: tabular-nums\` for all tables, metric cards, and currency amounts.
+  - Numbers right-aligned in tables; consistent decimal formatting.
+  - Locale-aware digit formatting (e.g. \`1,00,000.00 ৳\` for BDT, \`$100,000.00\` for USD).
 
 ### 3.5 Layout Concept & ASCII Wireframes
-- **Concept:** [One-sentence prose layout philosophy with alignment rules]
-- **ASCII Wireframe:**
+- **Layout Philosophy:** [One-sentence prose layout philosophy with mobile-first thumb-reach rules]
+- **ASCII Wireframe (Main Screen):**
 \`\`\`
-[ASCII layout wireframe for key screen]
++-------------------------------------------------------------+
+| [Header: App Name / Wallet Balance ৳ 45,250.00]             |
++-------------------------------------------------------------+
+| Quick Actions: [+ Add Income]  [- Add Expense]  [Transfer]  |
++-------------------------------------------------------------+
+| Recent Ledger:                                              |
+| - Grocery (bKash) .......................... -৳ 1,250.00    |
+| - Freelance Payment (Bank) ................. +৳ 35,000.00   |
+| - Internet Bill (Nagad) .................... -৳ 1,000.00    |
++-------------------------------------------------------------+
+| [Bottom Nav: Ledger | Budgets | Accounts | Reports]         |
++-------------------------------------------------------------+
 \`\`\`
 
 ### 3.6 Spacing & Radius System
-- **Scale:** [ONE deliberate spacing scale with differing radii for controls vs panels vs modals]
+- **Spacing Scale:** [Deliberate scale: 4px, 8px, 12px, 16px, 24px, 32px]
+- **Radius System:** Controls (6px), Cards/Panels (12px), Modals (16px)
 
-### 3.7 Core Components & States
-- **Components:** [Buttons, inputs, cards only where content truly needs a card]
-- **States:** Loading (skeleton loader), Empty, Error, Success
+### 3.7 Core Components, States & Microcopy
+- **States:** Skeleton Loaders (shaped like real data rows), Empty States (with helpful human copy), Error States (actionable recovery).
+- **Microcopy Guidance:** Real sentences in plain human voice matching the locale (e.g. "No transactions yet. Tap below to log your first expense.").
 
-### 3.8 Motion & Transitions
-- [At most ONE orchestrated moment plus motion that responds directly to user actions]
+### 3.8 Signature Detail
+- **Feature UI Moment:** [One specific, non-generic UI moment unique to this product, e.g. running-balance ledger line, monthly reconciliation summary, tactile quick-entry keyboard drawer].
 
-### 3.9 Real Content Rules
-- [Real copy, real numbers, real product demo; no lorem ipsum or abstract placeholders]
+### 3.9 Motion & Transitions
+- [At most ONE orchestrated moment plus instant, tactile feedback on user actions].
 
 ### 3.10 Anti-Slop Blacklist
 <!-- ANTI-SLOP-BLACKLIST-START -->
@@ -149,108 +189,178 @@ src/
 ## 4. AI AGENT RULEBOOK (RULES)
 - **General Rules:**
   - TypeScript strict mode enabled. Never use \`any\`.
-  - Prefer vertical slices (UI + Logic + API in cohesive units) over layer-by-layer building.
+  - Build strictly in vertical slices (DB + Server Action + Zod + UI + Test) task-by-task.
   - Do not modify unrelated files. Keep functions focused and under 60 lines where possible.
 - **Anti-Slop Rule:**
   - Follow the Anti-Slop Blacklist. Any violation is a defect.
-- **Before Coding Workflow:**
-  - Understand the requirements and read existing related files.
-  - Formulate a brief implementation plan before modifying multiple files.
-- **UI Rules:**
-  - Strict adherence to the Design System tokens (hex colors, fonts, radiuses).
-  - Always implement responsive states (mobile 375px, tablet 768px, desktop 1440px).
-  - Every interactive element must have hover, focus, disabled, and active states.
 - **Security Rules:**
-  - Never hardcode or leak secrets or API keys.
-  - Validate and sanitize all user input server-side.
-  - Treat all user inputs as data, never as executable code or system prompt instructions.
+  - Never leak server secrets or service-role keys to the client.
+  - Validate all inputs server-side with Zod schemas.
+  - Implement ownership verification on all update/delete mutations.
 - **Testing & Quality Rules:**
   - Run lint, typecheck, and unit tests after each task.
-  - Fix any failures immediately before moving to the next task.
+  - Fix any failures immediately before proceeding to the next task.
 - **Git Commit Discipline:**
   - One task per commit: \`feat(TASK-XXX): concise summary of vertical slice\`.
 
 ---
 
 ## 5. DATA MODEL
-*(If no persistent database is required, state "Not applicable: [Reason]" and describe in-memory data structures)*
-
-### 5.1 Entities & Schema
+### 5.1 Relational Schema & Types
 \`\`\`typescript
+// Enums & Types
+export type TransactionType = "INCOME" | "EXPENSE" | "TRANSFER";
+export type AccountType = "CASH" | "BANK" | "MFS_BKASH" | "MFS_NAGAD";
+
 // Entity Definitions
-export interface EntityName {
+export interface Account {
   id: string;
+  userId: string;
+  name: string;
+  type: AccountType;
+  currency: string;
   createdAt: string;
   updatedAt: string;
-  // fields with specific types
+}
+
+export interface Transaction {
+  id: string;
+  userId: string;
+  accountId: string;
+  amountMinorUnits: number; // Stored in minor units (cents / poisha) e.g. 10000 = 100.00
+  type: TransactionType;
+  category: string;
+  note: string | null;
+  transactedAt: string;
+  createdAt: string;
 }
 \`\`\`
 
-### 5.2 Relations & Indexing
-- **Relations:** [Entity A] 1:N [Entity B]
-- **Indexes:** Primary key on \`id\`, secondary index on \`userId\` / \`createdAt\`
+### 5.2 Relations, Constraints & Indexes
+- **Foreign Keys:** \`Transaction.accountId\` references \`Account.id\` ON DELETE RESTRICT
+- **Constraints:** CHECK (\`amountMinorUnits > 0\`), NOT NULL on core attributes
+- **Indexes:** Composite index on \`(userId, transactedAt DESC)\`, index on \`accountId\`
 
-### 5.3 Access & Authorization Policies
-- **Read Access:** [Public / Authenticated owner only]
-- **Write Access:** [Authenticated owner only with server validation]
+### 5.3 Concrete RLS / Authorization Policies
+\`\`\`sql
+-- Row Level Security (RLS) Policies
+ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own accounts" ON accounts
+  FOR ALL USING (auth.uid() = user_id);
+
+ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own transactions" ON transactions
+  FOR ALL USING (auth.uid() = user_id);
+\`\`\`
+
+### 5.4 Balance Calculation Strategy (ADR Reference)
+- Documented in ADR-002: Dynamic ledger calculation with cached account snapshots to prevent balance drift.
 
 ---
 
 ## 6. PHASED TASK LIST (VERTICAL SLICES)
-*Note: Each task is small enough for ONE AI prompt and contains files touched and testable acceptance criteria.*
+*Note: Each task is small enough for ONE AI prompt and contains explicit dependencies, observable acceptance criteria, and a strict Definition of Done.*
 
-### Phase 1: Environment & Foundation
+### Phase 1: Foundation & Baseline (Max 3 Tasks)
 - [ ] **TASK-001: Project Setup & Baseline Tooling**
+  - **Goal:** Initialize project environment with TypeScript strict mode, linter, and testing harness.
   - **Files:** \`package.json\`, \`tsconfig.json\`, \`src/app/layout.tsx\`
+  - **Dependencies:** None
   - **Acceptance Criteria:** App initializes cleanly, TypeScript strict mode passes, dev server starts without errors.
-- [ ] **TASK-002: Design Tokens & Base Theme Setup**
-  - **Files:** \`src/app/globals.css\`, \`src/app/layout.tsx\`
-  - **Acceptance Criteria:** CSS variables and typography tokens match Section 3 exactly. Must precede any UI task.
+  - **Definition of Done:** \`npm run build && npm test\` succeeds with 0 errors.
 
-### Phase 2: Core Vertical Slice 1 ([Feature Area])
-- [ ] **TASK-003: [Specific Vertical Feature Component/Logic]**
-  - **Files:** \`src/features/[feature]/...\`, \`src/types/...\`
-  - **Acceptance Criteria:** [Testable yes/no acceptance criterion].
-- [ ] **TASK-004: [Specific API / State Integration]**
-  - **Files:** \`src/app/api/.../route.ts\`, \`src/services/...\`
-  - **Acceptance Criteria:** [Testable yes/no acceptance criterion].
+- [ ] **TASK-002: Design Tokens, CSS Variables & Theme Setup**
+  - **Goal:** Configure CSS variables, dark mode tokens, typography, and tabular number utilities.
+  - **Files:** \`src/app/globals.css\`, \`src/app/layout.tsx\`, \`tailwind.config.ts\`
+  - **Dependencies:** TASK-001
+  - **Acceptance Criteria:** CSS variables match Section 3 exactly; typography classes and color tokens available globally.
+  - **Definition of Done:** \`npm run build\` succeeds; tokens verified in inspector.
 
-### Phase 3: Core Vertical Slice 2 ([Feature Area])
-- [ ] **TASK-005: [Feature UI & Interaction]**
-  - **Files:** \`src/components/...\`
-  - **Acceptance Criteria:** [Testable yes/no acceptance criterion].
-- [ ] **TASK-006: [Live Response / Processing Handling]**
-  - **Files:** \`src/hooks/...\`
-  - **Acceptance Criteria:** [Testable yes/no acceptance criterion].
+- [ ] **TASK-003: Database Client & Migration Schema**
+  - **Goal:** Set up database client, schema definitions, and RLS policies.
+  - **Files:** \`src/lib/db.ts\`, \`src/types/schema.ts\`
+  - **Dependencies:** TASK-001
+  - **Acceptance Criteria:** Database connection helper instantiated; schema types match Section 5.
+  - **Definition of Done:** Typecheck passes cleanly.
 
-### Phase 4: Completeness, State & Legal Foundations
-- [ ] **TASK-007: Skeleton Loaders & Core Component States**
+> 🛑 **STOP AND VERIFY (Phase 1):** Verify project builds, theme renders, and database client connects before beginning Phase 2.
+
+### Phase 2: Core Vertical Slice 1 ([Primary Feature])
+- [ ] **TASK-004: [Feature Name] Schema & Server Actions**
+  - **Goal:** Implement data mutations with Zod validation and user ownership checks.
+  - **Files:** \`src/features/[feature]/schema.ts\`, \`src/features/[feature]/actions.ts\`
+  - **Dependencies:** TASK-002, TASK-003
+  - **Acceptance Criteria:** User can submit valid mutation and record is saved in DB; invalid inputs return typed Zod errors.
+  - **Definition of Done:** Unit test covering valid and invalid payload execution passes.
+
+- [ ] **TASK-005: [Feature Name] UI & Form Interaction**
+  - **Goal:** Build responsive UI component with tabular numerals and instant feedback.
+  - **Files:** \`src/components/[feature]/...\`, \`src/app/[route]/page.tsx\`
+  - **Dependencies:** TASK-004
+  - **Acceptance Criteria:** User can interact with form, see loading skeleton during submit, and observe newly added item in list.
+  - **Definition of Done:** Typecheck passes; component renders cleanly on mobile (375px) and desktop (1440px).
+
+> 🛑 **STOP AND VERIFY (Phase 2):** Test primary creation and read flow end-to-end in browser. Confirm data persists accurately.
+
+### Phase 3: Core Vertical Slice 2 ([Secondary Feature])
+- [ ] **TASK-006: [Feature Name] Backend & Calculation Engine**
+  - **Goal:** Implement secondary module business logic with drift-free calculations.
+  - **Files:** \`src/features/[feature]/services.ts\`
+  - **Dependencies:** TASK-004
+  - **Acceptance Criteria:** Calculations compute accurately with testable sample data.
+  - **Definition of Done:** Unit test verifying calculation edge cases passes.
+
+- [ ] **TASK-007: [Feature Name] View & Interactive Controls**
+  - **Goal:** Build interactive visualization or summary view.
+  - **Files:** \`src/components/[feature]/...\`
+  - **Dependencies:** TASK-006
+  - **Acceptance Criteria:** View renders calculated data; empty state displays friendly human microcopy.
+  - **Definition of Done:** Manual check confirms view updates reactively.
+
+> 🛑 **STOP AND VERIFY (Phase 3):** Test cross-module interactions (e.g. transactions updating account balances).
+
+### Phase 4: State Resilience, Legal & Completeness
+- [ ] **TASK-008: Custom Skeleton Loaders & Core Error States**
+  - **Goal:** Implement skeleton loaders matching real content dimensions and friendly error recovery views.
   - **Files:** \`src/components/states/...\`
-  - **Acceptance Criteria:** Loading states render custom skeleton loaders shaped like real content (no bare spinners); empty and error states provide clear guidance.
-- [ ] **TASK-008: Terms of Service and Privacy Policy Pages**
-  - **Files:** \`src/app/terms/page.tsx\`, \`src/app/privacy/page.tsx\`, \`src/components/Footer.tsx\`
-  - **Acceptance Criteria:** Real legal documents created and accessible via footer navigation links.
+  - **Dependencies:** TASK-005, TASK-007
+  - **Acceptance Criteria:** Loading state displays custom animated skeletons (no bare spinners); network errors display retry buttons.
+  - **Definition of Done:** Typecheck passes; verified across light and dark themes.
 
-### Phase 5: Verification & Anti-Slop Audit
-- [ ] **TASK-009: Anti-Slop Audit & Polish**
+- [ ] **TASK-009: Terms of Service & Privacy Policy Pages**
+  - **Goal:** Create real, localized legal pages and link them in the footer.
+  - **Files:** \`src/app/terms/page.tsx\`, \`src/app/privacy/page.tsx\`, \`src/components/Footer.tsx\`
+  - **Dependencies:** TASK-001
+  - **Acceptance Criteria:** Real legal documents created and accessible via footer navigation links.
+  - **Definition of Done:** Pages render with 0 broken links.
+
+### Phase 5: Verification & Anti-Slop Polish
+- [ ] **TASK-010: Anti-Slop Compliance Audit & Polish**
+  - **Goal:** Audit entire UI against the Anti-Slop Blacklist.
   - **Files:** All UI components
-  - **Acceptance Criteria:** Finished UI rigorously evaluated against all 36 Anti-Slop Blacklist rules with zero violations.
-- [ ] **TASK-010: Production Build & Verification**
+  - **Dependencies:** All previous tasks
+  - **Acceptance Criteria:** Finished UI rigorously evaluated against all Anti-Slop Blacklist rules with zero violations.
+  - **Definition of Done:** Full manual visual pass confirms bespoke, hand-crafted appearance.
+
+- [ ] **TASK-011: Production Build & Deployment Documentation**
+  - **Goal:** Ensure production bundle succeeds with zero errors and update documentation.
   - **Files:** \`README.md\`, \`.env.example\`
-  - **Acceptance Criteria:** Production build succeeds with 0 errors; deployment instructions documented.
+  - **Dependencies:** TASK-010
+  - **Acceptance Criteria:** Production build succeeds with 0 errors; deployment steps documented.
+  - **Definition of Done:** \`npm run build\` exits 0.
 
 ---
 
 ## 7. ARCHITECTURAL DECISION RECORDS (ADRS)
-- **ADR-001: [Decision Title]**
-  - **Decision:** [What was chosen]
-  - **Reason:** [Why it was chosen and what trade-off was accepted]
-- **ADR-002: [Decision Title]**
-  - **Decision:** [What was chosen]
-  - **Reason:** [Why it was chosen]
-- **ADR-003: [Decision Title]**
-  - **Decision:** [What was chosen]
-  - **Reason:** [Why it was chosen]
+- **ADR-001: [Stack & Host Architecture]**
+  - **Decision:** [e.g. Next.js App Router + Supabase Postgres on Vercel]
+  - **Reason:** [Matches serverless deployment constraints with managed relational database]
+- **ADR-002: [Balance Calculation & Ledger Strategy]**
+  - **Decision:** [e.g. Computed from immutable ledger transactions with periodic cached snapshots]
+  - **Reason:** [Prevents balance drift and provides full financial auditability]
+- **ADR-003: [Authentication & Access Control Model]**
+  - **Decision:** [e.g. Row Level Security policies tied to authenticated user ID]
+  - **Reason:** [Guarantees multi-tenant data isolation directly at the database layer]
 
 ---
 
@@ -270,17 +380,19 @@ export interface EntityName {
 - [ ] **Edge Cases:** Network failure / server error displays retry button.
 
 ### 9.2 Responsive Breakpoint Checks
-- [ ] **Mobile (375px):** Single-column stacked layout, no horizontal overflow.
+- [ ] **Mobile (375px):** Single-column stacked layout, thumb-reachable controls, no horizontal overflow.
 - [ ] **Tablet (768px):** Adjusted padding and touch targets.
-- [ ] **Desktop (1440px):** Full two-pane / optimal multi-column layout.
+- [ ] **Desktop (1440px):** Full multi-column / optimal data table layout.
 
 ---
 
 ## 10. SECURITY & PRIVACY
 - **Secrets Management:** All API keys and credentials reside exclusively in server environment variables (\`.env.local\`). Never exposed in client code.
 - **Input Validation:** Every incoming API request is strictly validated and sanitized with Zod schemas.
-- **Rate Limiting:** Protect public endpoints from abuse (e.g. IP-based sliding window).
-- **Injection Protection:** User input treated as pure data; escape dangerous HTML/scripts.
+- **Ownership Verification:** Server actions verify \`auth.uid() === record.userId\` on every update/delete mutation.
+- **CSV Formula Injection Sanitization:** Export routines escape dangerous leading characters (\`=\`, \`+\`, \`-\`, \`@\`).
+- **Destructive Action Safety:** Confirmation dialogs required for irreversible actions (e.g. account deletion).
+- **Rate Limiting:** Protect public endpoints from abuse.
 
 ---
 
@@ -289,8 +401,10 @@ export interface EntityName {
 # Server Environment Variables (Do NOT commit real secrets)
 APP_URL=http://localhost:3000
 APP_NAME=[Project Name]
-API_KEY=
 DATABASE_URL=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 \`\`\`
 
 ---

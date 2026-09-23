@@ -8,17 +8,22 @@ import {
 } from "./anti-slop";
 
 describe("buildPrompt", () => {
-  it("returns correct system prompt verbatim with Anti-Slop hard rules (13-16)", () => {
+  it("returns correct system prompt with all generator architecture sections (A through I)", () => {
     const input: GeneratePlanInput = {
       idea: "A habit tracking app with streak reminders and weekly summaries.",
     };
 
     const result = buildPrompt(input);
     expect(result.system).toBe(PLANNER_SYSTEM_PROMPT);
-    expect(result.system).toContain("13. ANTI-SLOP:");
-    expect(result.system).toContain("14. The ANTI-SLOP BLACKLIST must be copied verbatim");
-    expect(result.system).toContain("15. TASKS must include: a design-token task");
-    expect(result.system).toContain("16. Your own output must obey the blacklist for copy");
+    expect(result.system).toContain("A. INTENT DEPTH DETECTION & SCOPE SCALING");
+    expect(result.system).toContain("B. STACK SANITY CHECKS & CONTRADICTION RESOLUTION");
+    expect(result.system).toContain("C. LOCALE & DOMAIN CONTEXT");
+    expect(result.system).toContain("D. DESIGN SYSTEM (KILL THE REPEATED SIGNATURE)");
+    expect(result.system).toContain("E. RELATIONAL DATA MODEL QUALITY");
+    expect(result.system).toContain("F. TASK LIST (REAL VERTICAL SLICES)");
+    expect(result.system).toContain("G. STACK-SPECIFIC SECURITY & PRIVACY");
+    expect(result.system).toContain("H. UX, SPEED TARGETS & MICROCOPY");
+    expect(result.system).toContain("I. SILENT PRE-OUTPUT SELF-AUDIT");
   });
 
   it("assembles user prompt with master template, anti-slop blacklist, and idea in exact order", () => {
@@ -41,7 +46,7 @@ describe("buildPrompt", () => {
     expect(result.user).toContain(ANTI_SLOP_START_MARKER);
     expect(result.user).toContain(ANTI_SLOP_END_MARKER);
     expect(result.user).toContain(ANTI_SLOP_BLACKLIST_MARKDOWN);
-    expect(result.user).toContain("## 3. DESIGN SYSTEM (anti-AI-look): MUST contain all of these sub-parts:");
+    expect(result.user).toContain("## 3. DESIGN SYSTEM (Anti-AI-Look)");
     expect(result.user).toContain("Project name: Not specified (generate a fitting name)");
   });
 
