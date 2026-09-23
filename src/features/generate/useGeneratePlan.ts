@@ -67,6 +67,13 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
 
       const controller = new AbortController();
       abortControllerRef.current = controller;
+      let isTimedOut = false;
+
+      // Set a 45-second initial connection timeout
+      const initialTimeoutId = setTimeout(() => {
+        isTimedOut = true;
+        controller.abort();
+      }, 45000);
 
       setStatus("loading");
       setPlan("");
@@ -86,13 +93,16 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
 
         // Handle non-200 responses
         if (!response.ok) {
+          clearTimeout(initialTimeoutId);
           let errorData: ApiErrorResponse;
           try {
             errorData = await response.json();
           } catch {
             errorData = {
-              error: `Request failed with status ${response.status}`,
-              code: "INTERNAL_ERROR",
+              error: response.status === 504
+                ? "Serverless execution timed out on Vercel. Please retry with 'openrouter/free' or check your configuration."
+                : `Request failed with status ${response.status}`,
+              code: response.status === 504 ? "PROVIDER_UNAVAILABLE" : "INTERNAL_ERROR",
             };
           }
 
@@ -104,6 +114,7 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
 
         // Handle streaming response
         if (!response.body) {
+          clearTimeout(initialTimeoutId);
           throw new Error("No response body received from server.");
         }
 
@@ -120,14 +131,22 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
 
           const chunk = decoder.decode(value, { stream: true });
           if (chunk) {
-            accumulated += chunk;
-            setPlan(accumulated);
-
+            // Once first chunk arrives, cancel initial connection timeout
             if (!hasStartedStreaming) {
+              clearTimeout(initialTimeoutId);
               hasStartedStreaming = true;
               setStatus("streaming");
             }
+
+            accumulated += chunk;
+            setPlan(accumulated);
           }
+        }
+
+        clearTimeout(initialTimeoutId);
+
+        if (!accumulated.trim()) {
+          throw new Error("Empty response received from AI model. Please retry.");
         }
 
         // Run non-blocking deterministic Anti-Slop lint on final assembled text
@@ -135,6 +154,15 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
         setLintResult(audit);
         setStatus("success");
       } catch (err: unknown) {
+        clearTimeout(initialTimeoutId);
+
+        if (isTimedOut) {
+          setError("The AI model took too long to connect. Free tier models may experience temporary queue delays. Please retry.");
+          setErrorCode("PROVIDER_UNAVAILABLE");
+          setStatus("error");
+          return;
+        }
+
         if (controller.signal.aborted || (err instanceof Error && err.name === "AbortError")) {
           // Stopped intentionally by user
           setStatus((prev) => (prev === "streaming" || prev === "loading" ? "success" : prev));
@@ -146,6 +174,7 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
         setErrorCode("INTERNAL_ERROR");
         setStatus("error");
       } finally {
+        clearTimeout(initialTimeoutId);
         if (abortControllerRef.current === controller) {
           abortControllerRef.current = null;
         }

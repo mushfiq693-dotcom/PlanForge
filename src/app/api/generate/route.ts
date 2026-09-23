@@ -8,6 +8,7 @@ import { ApiErrorResponse, ApiErrorCode } from "@/types/api";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 /**
  * Helper to extract client IP address for rate limiting.
@@ -135,6 +136,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache, no-transform",
         "Transfer-Encoding": "chunked",
+        "X-Accel-Buffering": "no",
         "X-Content-Type-Options": "nosniff",
         "X-RateLimit-Limit": String(rateLimit.limit),
         "X-RateLimit-Remaining": String(rateLimit.remaining),

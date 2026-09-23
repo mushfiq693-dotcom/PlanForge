@@ -23,7 +23,7 @@ describe("env validation module", () => {
 
     const env = validateServerEnv(raw);
     expect(env.OPENROUTER_API_KEY).toBe("sk-or-v1-test-key");
-    expect(env.OPENROUTER_MODEL).toBe("anthropic/claude-3.7-sonnet");
+    expect(env.OPENROUTER_MODEL).toBe("openrouter/free");
     expect(env.OPENROUTER_BASE_URL).toBe("https://openrouter.ai/api/v1");
     expect(env.APP_NAME).toBe("PlanForge");
     expect(env.RATE_LIMIT_MAX).toBe(5);

@@ -1,6 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export function LoadingState() {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const getStatusMessage = () => {
+    if (seconds < 5) return "Connecting to OpenRouter SSE Stream...";
+    if (seconds < 15) return "Queuing request & initializing model pipeline...";
+    return "Synthesizing architecture & blueprint sections...";
+  };
+
   return (
     <div className="flex flex-1 flex-col justify-start rounded-[6px] border border-border bg-canvas p-6 font-mono">
       {/* Header Loading Status */}
@@ -10,10 +25,10 @@ export function LoadingState() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
-          <span>INITIALIZING GENERATION PIPELINE...</span>
+          <span>INITIALIZING GENERATION PIPELINE ({seconds}s)...</span>
         </div>
         <span className="text-[11px] text-text-muted">
-          Connecting to OpenRouter SSE Stream
+          {getStatusMessage()}
         </span>
       </div>
 

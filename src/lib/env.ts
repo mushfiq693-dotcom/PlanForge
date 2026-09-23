@@ -9,7 +9,7 @@ export const serverEnvSchema = z.object({
   OPENROUTER_MODEL: z
     .string()
     .min(1, "OPENROUTER_MODEL cannot be empty.")
-    .default("anthropic/claude-3.7-sonnet"),
+    .default("openrouter/free"),
   OPENROUTER_BASE_URL: z
     .string()
     .url("OPENROUTER_BASE_URL must be a valid URL.")
