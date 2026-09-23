@@ -26,13 +26,10 @@ export function LandingHero() {
         </Link>
 
         {/* Cinematic 2-Line Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text font-sans leading-[1.2] sm:leading-[1.15] mb-8 drop-shadow-md text-center max-w-4xl mx-auto">
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text font-sans leading-[1.2] sm:leading-[1.15] mb-8 text-center max-w-4xl mx-auto">
           <span className="block">From Raw Idea to</span>
-          <span className="block mt-1 sm:mt-2">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#65e8d6] to-primary">
-              Execution-Ready
-            </span>{" "}
-            Blueprint
+          <span className="block mt-1 sm:mt-2 text-primary">
+            Execution-Ready Blueprint
           </span>
         </h1>
 
@@ -46,16 +43,16 @@ export function LandingHero() {
           <Link
             href="/app"
             id="hero-start-building-btn"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-white/25 px-8 py-3.5 text-sm sm:text-base font-medium text-text transition-all duration-200 shadow-sm backdrop-blur-xl group cursor-pointer active:scale-[0.99]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-white/25 px-8 py-3.5 text-sm sm:text-base font-medium text-text transition-all duration-200 backdrop-blur-xl group cursor-pointer active:scale-[0.99]"
           >
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </span>
             <span className="text-text group-hover:text-primary transition-colors">
-              Start Building — It&apos;s Free
+              Start Building (Free)
             </span>
-            <ArrowRight className="h-4 w-4 text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="h-4 w-4 text-text-muted group-hover:text-primary transition-colors" />
           </Link>
         </div>
       </div>

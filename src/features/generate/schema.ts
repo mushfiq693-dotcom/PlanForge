@@ -73,6 +73,14 @@ export const generatePlanRequestSchema = z.object({
     .optional()
     .or(z.literal(""))
     .nullable(),
+
+  fixInstructions: z
+    .string()
+    .trim()
+    .max(2000, "Fix instructions cannot exceed 2,000 characters.")
+    .optional()
+    .or(z.literal(""))
+    .nullable(),
 });
 
 export type GeneratePlanRequest = z.infer<typeof generatePlanRequestSchema>;

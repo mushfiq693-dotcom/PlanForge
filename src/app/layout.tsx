@@ -16,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PlanForge — Idea-to-Implementation-Plan Generator",
+  title: "PlanForge: Idea-to-Implementation-Plan Generator",
   description:
     "Convert raw app ideas into ONE complete, execution-ready IMPLEMENTATION_PLAN.md that AI coding agents (Antigravity, Claude Code) can execute immediately.",
   keywords: [
@@ -36,13 +36,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://planforge.dev",
     siteName: "PlanForge",
-    title: "PlanForge — Idea-to-Implementation-Plan Generator",
+    title: "PlanForge: Idea-to-Implementation-Plan Generator",
     description:
       "Convert raw app ideas into a single, execution-ready IMPLEMENTATION_PLAN.md for AI coding agents.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PlanForge — Idea-to-Implementation-Plan Generator",
+    title: "PlanForge: Idea-to-Implementation-Plan Generator",
     description:
       "Convert raw app ideas into a single, execution-ready IMPLEMENTATION_PLAN.md for AI coding agents.",
   },

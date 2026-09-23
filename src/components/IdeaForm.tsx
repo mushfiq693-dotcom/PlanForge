@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Square, AlertCircle } from "lucide-react";
+import { FileCode2, Square, AlertCircle } from "lucide-react";
 
 interface IdeaFormProps {
   idea: string;
@@ -69,6 +69,7 @@ export function IdeaForm({
             name="idea"
             rows={5}
             disabled={isGenerating}
+            data-lenis-prevent="true"
             value={idea}
             onChange={(e) => {
               onIdeaChange(e.target.value);
@@ -132,7 +133,7 @@ export function IdeaForm({
                 : "opacity-40 cursor-not-allowed"
             }`}
           >
-            <Sparkles className="h-4 w-4" />
+            <FileCode2 className="h-4 w-4" />
             Generate Plan
           </button>
         )}

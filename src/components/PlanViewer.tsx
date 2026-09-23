@@ -25,11 +25,23 @@ export function PlanViewer({
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
 
-    // If user is more than 100px from the bottom, consider them scrolling up
-    if (distanceFromBottom > 100) {
+    // If user is more than 60px from the bottom, consider them scrolling up
+    if (distanceFromBottom > 60) {
       setUserScrolledUp(true);
     } else {
       setUserScrolledUp(false);
+    }
+  }, []);
+
+  // Listen to wheel events directly so user scrolling up during streaming pauses auto-scroll instantly
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    if (e.deltaY < 0) {
+      setUserScrolledUp(true);
+    } else if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+      if (scrollHeight - scrollTop - clientHeight < 40) {
+        setUserScrolledUp(false);
+      }
     }
   }, []);
 
@@ -64,11 +76,13 @@ export function PlanViewer({
 
   if (mode === "raw") {
     return (
-      <div className="relative flex-1 min-h-0 flex flex-col">
+      <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden">
         <div
           ref={containerRef}
           onScroll={handleScroll}
-          className="flex-1 overflow-y-auto overflow-x-auto rounded-[8px] border border-white/10 bg-black/50 p-4 font-mono text-xs text-zinc-200 leading-relaxed selection:bg-primary/30"
+          onWheel={handleWheel}
+          data-lenis-prevent="true"
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-auto rounded-[8px] border border-white/10 bg-black/50 p-4 font-mono text-xs text-zinc-200 leading-relaxed selection:bg-primary/30 overscroll-contain touch-pan-y"
         >
           <pre className="whitespace-pre-wrap font-mono break-words">
             {content}
@@ -93,11 +107,13 @@ export function PlanViewer({
   }
 
   return (
-    <div className="relative flex-1 min-h-0 flex flex-col">
+    <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden">
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto overflow-x-hidden rounded-[8px] border border-white/10 bg-black/40 backdrop-blur-md p-4 sm:p-6 font-sans text-sm text-text leading-relaxed selection:bg-primary/30"
+        onWheel={handleWheel}
+        data-lenis-prevent="true"
+        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden rounded-[8px] border border-white/10 bg-black/40 backdrop-blur-md p-4 sm:p-6 font-sans text-sm text-text leading-relaxed selection:bg-primary/30 overscroll-contain touch-pan-y"
       >
         <div className="prose prose-invert max-w-none">
           <ReactMarkdown

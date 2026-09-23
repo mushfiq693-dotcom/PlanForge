@@ -130,9 +130,9 @@ export function AdvancedOptions({
                 className="w-full appearance-none rounded-[6px] border border-border bg-canvas px-3 py-2 pr-9 text-xs text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-sans cursor-pointer transition-colors"
               >
                 <option value="" className="bg-surface text-text">Let AI decide (Recommended)</option>
-                <option value="beginner" className="bg-surface text-text">Beginner — Extra explanation & starter-friendly setup</option>
-                <option value="intermediate" className="bg-surface text-text">Intermediate — Standard modern design & architecture</option>
-                <option value="advanced" className="bg-surface text-text">Advanced — Scalable architecture, testing & performance</option>
+                <option value="beginner" className="bg-surface text-text">Beginner: Extra explanation & starter-friendly setup</option>
+                <option value="intermediate" className="bg-surface text-text">Intermediate: Standard modern design & architecture</option>
+                <option value="advanced" className="bg-surface text-text">Advanced: Scalable architecture, testing & performance</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-text-muted">
                 <ChevronDown className="h-4 w-4" />

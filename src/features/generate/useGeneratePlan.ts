@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { GeneratePlanRequest } from "./schema";
 import { ApiErrorResponse, ApiErrorCode } from "@/types/api";
+import { lintPlan, LintResult } from "@/lib/plan-lint";
 
 export type GenerationStatus = "idle" | "loading" | "streaming" | "success" | "error";
 
@@ -11,6 +12,7 @@ export interface UseGeneratePlanReturn {
   plan: string;
   error: string | null;
   errorCode: ApiErrorCode | null;
+  lintResult: LintResult | null;
   isGenerating: boolean;
   generate: (payload: GeneratePlanRequest) => Promise<void>;
   stop: () => void;
@@ -23,6 +25,7 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
   const [plan, setPlan] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<ApiErrorCode | null>(null);
+  const [lintResult, setLintResult] = useState<LintResult | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -52,6 +55,7 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
     setPlan("");
     setError(null);
     setErrorCode(null);
+    setLintResult(null);
   }, []);
 
   const generate = useCallback(
@@ -68,6 +72,7 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
       setPlan("");
       setError(null);
       setErrorCode(null);
+      setLintResult(null);
 
       try {
         const response = await fetch("/api/generate", {
@@ -125,6 +130,9 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
           }
         }
 
+        // Run non-blocking deterministic Anti-Slop lint on final assembled text
+        const audit = lintPlan(accumulated);
+        setLintResult(audit);
         setStatus("success");
       } catch (err: unknown) {
         if (controller.signal.aborted || (err instanceof Error && err.name === "AbortError")) {
@@ -151,6 +159,7 @@ export function useGeneratePlan(): UseGeneratePlanReturn {
     plan,
     error,
     errorCode,
+    lintResult,
     isGenerating: status === "loading" || status === "streaming",
     generate,
     stop,

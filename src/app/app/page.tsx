@@ -13,6 +13,7 @@ import { ErrorState } from "@/components/states/ErrorState";
 import { useGeneratePlan } from "@/features/generate/useGeneratePlan";
 import { GeneratePlanRequest } from "@/features/generate/schema";
 import { PlanForgeLogo } from "@/components/PlanForgeLogo";
+import { PlanQualityPanel } from "@/components/PlanQualityPanel";
 
 const initialAdvancedOptions: AdvancedOptionsValues = {
   name: "",
@@ -30,19 +31,25 @@ export default function PlannerWorkspacePage() {
     plan,
     error,
     errorCode,
+    lintResult,
     isGenerating,
     generate,
     stop,
   } = useGeneratePlan();
 
-  const handleGenerate = () => {
+  const handleGenerate = (fixInstructions?: string) => {
     const payload: GeneratePlanRequest = {
       idea,
       name: advancedOptions.name || undefined,
       targetUsers: advancedOptions.targetUsers || undefined,
       level: advancedOptions.level || undefined,
+      fixInstructions: fixInstructions || undefined,
     };
     generate(payload);
+  };
+
+  const handleRegenerateWithFixes = (failedInstructions: string) => {
+    handleGenerate(failedInstructions);
   };
 
   return (
@@ -95,7 +102,8 @@ export default function PlannerWorkspacePage() {
         {/* Left Column: Input Specification (Fixed width, never expands vertically with right pane) */}
         <section
           aria-label="App Idea Input"
-          className="w-full lg:w-[420px] xl:w-[460px] shrink-0 flex flex-col rounded-[16px] border border-white/10 bg-surface/70 backdrop-blur-2xl p-5 shadow-2xl lg:max-h-full lg:overflow-y-auto"
+          data-lenis-prevent="true"
+          className="w-full lg:w-[420px] xl:w-[460px] shrink-0 flex flex-col rounded-[16px] border border-white/10 bg-surface/70 backdrop-blur-2xl p-5 shadow-2xl lg:max-h-full lg:overflow-y-auto overscroll-contain"
         >
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4 shrink-0">
             <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider font-sans flex items-center gap-2">
@@ -126,7 +134,8 @@ export default function PlannerWorkspacePage() {
         {/* Right Column: Generated Plan View (Fixed flex height, content scrolls internally) */}
         <section
           aria-label="Generated Plan"
-          className="flex flex-1 w-full h-full min-h-[520px] flex-col rounded-[16px] border border-white/10 bg-surface/70 backdrop-blur-2xl p-5 shadow-2xl overflow-hidden"
+          data-lenis-prevent="true"
+          className="flex flex-1 w-full h-[650px] lg:h-full min-h-[520px] flex-col rounded-[16px] border border-white/10 bg-surface/70 backdrop-blur-2xl p-5 shadow-2xl overflow-hidden"
         >
           {/* Plan Actions Bar (Copy, Download, Toggle, Regenerate) */}
           <PlanActions
@@ -150,11 +159,18 @@ export default function PlannerWorkspacePage() {
                 onRetry={handleGenerate}
               />
             ) : plan ? (
-              <PlanViewer
-                content={plan}
-                isStreaming={isGenerating}
-                mode={viewMode}
-              />
+              <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
+                <PlanQualityPanel
+                  lintResult={lintResult}
+                  isGenerating={isGenerating}
+                  onRegenerateWithFixes={handleRegenerateWithFixes}
+                />
+                <PlanViewer
+                  content={plan}
+                  isStreaming={isGenerating}
+                  mode={viewMode}
+                />
+              </div>
             ) : (
               <EmptyState />
             )}

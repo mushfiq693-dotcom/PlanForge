@@ -16,13 +16,16 @@ export function LandingFooter() {
           </span>
         </div>
 
-        <div className="flex items-center gap-6 text-xs text-text-muted font-sans">
+        <div className="flex flex-wrap items-center gap-6 text-xs text-text-muted font-sans">
           <Link href="/app" className="hover:text-primary transition-colors">
             Planner App
           </Link>
-          <span className="text-text-muted">
-            Antigravity
-          </span>
+          <Link href="/terms" className="hover:text-primary transition-colors">
+            Terms
+          </Link>
+          <Link href="/privacy" className="hover:text-primary transition-colors">
+            Privacy
+          </Link>
           <a
             href="https://claude.ai"
             target="_blank"

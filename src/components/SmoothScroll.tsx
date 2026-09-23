@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
 interface SmoothScrollProps {
@@ -9,6 +10,7 @@ interface SmoothScrollProps {
 
 export function SmoothScroll({ children }: SmoothScrollProps) {
   const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Respect prefers-reduced-motion for accessibility
@@ -16,7 +18,13 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       "(prefers-reduced-motion: reduce)"
     );
 
-    if (prefersReducedMotion.matches) {
+    // On /app, the layout is a fixed two-pane workspace with internal scrolling panels.
+    // Lenis is bypassed on /app so inner panel scrolling (PlanViewer, IdeaForm) is 100% native and unrestricted.
+    if (prefersReducedMotion.matches || pathname?.startsWith("/app")) {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
       return;
     }
 
@@ -30,6 +38,17 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       touchMultiplier: 1.5,
       infinite: false,
       autoRaf: false,
+      prevent: (node) => {
+        if (!node) return false;
+        return (
+          node.hasAttribute?.("data-lenis-prevent") ||
+          Boolean(
+            node.closest?.(
+              "[data-lenis-prevent], .overflow-y-auto, .overflow-auto, textarea, pre, code"
+            )
+          )
+        );
+      },
     });
 
     lenisRef.current = lenis;
@@ -73,7 +92,7 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [pathname]);
 
   return <>{children}</>;
 }

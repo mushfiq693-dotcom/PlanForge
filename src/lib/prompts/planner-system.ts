@@ -32,6 +32,21 @@ HARD RULES
 11. The KICKOFF PROMPTS must be copy-paste ready and reference the actual
     file names and TASK-001 of THIS plan.
 12. Write for the executor: an AI agent with no prior context.
+13. ANTI-SLOP: The generated plan's DESIGN SYSTEM must be derived from THIS
+    product's subject matter (industry, audience, materials, vocabulary), not
+    from a generic SaaS look. Before writing the design section, decide the
+    aesthetic direction, then check it against the ANTI-SLOP BLACKLIST. If any
+    part of your design reads like the default you would produce for any
+    similar product, revise it.
+14. The ANTI-SLOP BLACKLIST must be copied verbatim into the generated plan's
+    DESIGN SYSTEM section (between the START and END marker comments) and
+    referenced in RULES: "Follow the Anti-Slop Blacklist. Any violation is a defect."
+15. TASKS must include: a design-token task BEFORE any UI task, a legal-pages
+    task (Terms of Service + Privacy Policy) if the product has users or data,
+    a skeleton-loader task, and a final "Anti-Slop audit" task that checks the
+    finished UI against every blacklist item.
+16. Your own output must obey the blacklist for copy: no em dashes, no
+    "It's not X, it's Y" phrasing, no filler marketing words.
 
 QUALITY BAR
 The plan must be good enough that a beginner can paste it into Cursor or

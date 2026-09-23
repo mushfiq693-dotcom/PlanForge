@@ -8,7 +8,7 @@ const tabs = [
   {
     id: "overview",
     name: "0. Overview & PRD",
-    content: `# IMPLEMENTATION_PLAN.md — DevBookmark Pro
+    content: `# IMPLEMENTATION_PLAN.md: DevBookmark Pro
 
 ## SECTION 0: PROJECT SNAPSHOT
 - **Project Name:** DevBookmark Pro
@@ -180,7 +180,7 @@ export function LandingShowcase() {
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
                 </span>
                 <span className="text-text group-hover:text-primary transition-colors">Forge Yours</span>
-                <ArrowRight className="h-3.5 w-3.5 text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                <ArrowRight className="h-3.5 w-3.5 text-text-muted group-hover:text-primary transition-colors" />
               </Link>
             </div>
           </div>
@@ -198,10 +198,10 @@ export function LandingShowcase() {
             </div>
             <Link
               href="/app"
-              className="inline-flex items-center gap-1.5 text-text-muted hover:text-primary transition-colors group"
+              className="inline-flex items-center gap-1.5 text-text-muted hover:text-primary transition-colors"
             >
               <span>Generate your plan in Workspace</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
